@@ -1,2 +1,2 @@
-# Play.Catalog 
+# Play.Identity
 Play Economy Identity microservice.
