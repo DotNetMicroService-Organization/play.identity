@@ -26,7 +26,7 @@ builder.Services.Configure<IdentitySettings>(builder.Configuration.GetSection(na
         serviceSettings.ServiceName
     );
 
-builder.Services.AddMassTransitWithRabbitMq(retryConfigurator =>
+builder.Services.AddMassTransitWithMessageBroker(builder.Configuration, retryConfigurator =>
 {
     retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
     retryConfigurator.Ignore(typeof(UnknownUserException));

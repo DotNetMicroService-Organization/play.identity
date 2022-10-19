@@ -3,7 +3,7 @@ Play Economy Identity microservice.
 
 ## Create and publish package Contracts
 ```powershell
-$version="1.0.3"
+$version="1.0.4"
 $owner="DotNetMicroService-Organization"
 $ph_pat="[PAT HERE]"
 
@@ -23,5 +23,6 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
 ```powershell
 $adminPass="[PASS HERE]"
 $cosmosDbConnString="[CONN STRING HERE]"
-docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__ConnectionString=$cosmosDbConnString -e RabbitMqSettings__Host=rabbitmq -e IdentitySettings__AdminUserPassword=$adminPass --network playinfra_default play.identity:$version
+$serviceBusConnString="[CONN STRING HERE]"
+docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__ConnectionString=$cosmosDbConnString -e ServiceBusSettings__ConnectionString=$serviceBusConnString -e ServiceSettings__MessageBroker="SERVICEBUS" -e IdentitySettings__AdminUserPassword=$adminPass play.identity:$version
 ```
