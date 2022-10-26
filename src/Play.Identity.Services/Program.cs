@@ -52,6 +52,8 @@ builder.Services.AddHostedService<IdentitySeedHostedService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -84,5 +86,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapRazorPages();
+
+app.MapHealthChecks("/health");
 
 app.Run();
