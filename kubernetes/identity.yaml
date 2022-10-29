@@ -10,28 +10,14 @@ spec:
     metadata:
       labels:
         app: identity
+        aadpodidbinding: identity
     spec:
       containers:
         - name: identity
-          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.5
+          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.6
           env:
             - name: ServiceSettings__MessageBroker
               value: SERVICEBUS
-            - name: MongoDbSettings__ConnectionString
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: cosmosdb-connectionstring
-            - name: ServiceBusSettings__ConnectionString
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: servicebus-connectionstring
-            - name: IdentitySettings__AdminUserPassword
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: admin-password
           resources:
             limits:
               memory: "128Mi"

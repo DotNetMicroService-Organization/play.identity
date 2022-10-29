@@ -40,10 +40,10 @@ $namespace="identity"
 kubectl create namespace $namespace
 ```
 
-## Create the k8s secret
+<!-- ## Create the k8s secret
 ```powershell
 kubectl create secret generic identity-secrets --from-literal=cosmosdb-connectionstring=$cosmosDbConnString --from-literal=servicebus-connectionstring=$serviceBusConnString --from-literal=admin-password=$adminPass -n $namespace
-```
+``` -->
 
 ## Create the k8s pod
 ```powershell
