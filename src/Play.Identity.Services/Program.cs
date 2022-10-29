@@ -81,6 +81,13 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseHttpsRedirection();
 
+app.Use((context, next) =>
+{
+    var identitySettings = builder.Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
+    context.Request.PathBase = new PathString(identitySettings.PathBase);
+    return next();
+});
+
 app.UseStaticFiles();
 
 app.UseIdentityServer();
