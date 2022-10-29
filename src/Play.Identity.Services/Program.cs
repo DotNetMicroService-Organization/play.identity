@@ -1,20 +1,29 @@
+using Azure.Identity;
 using GreenPipes;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 using Play.Common.HealthChecks;
 using Play.Common.MassTransit;
 using Play.Common.Settings;
 using Play.Identity.Services.Entities;
 using Play.Identity.Services.Exceptions;
-using Play.Identity.Services.HealthChecks;
 using Play.Identity.Services.HostedServices;
 using Play.Identity.Services.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureAppConfiguration((context, configurationBuilder) =>
+{
+    if (context.HostingEnvironment.IsProduction())
+    {
+        configurationBuilder.AddAzureKeyVault(
+            new Uri("https://dotnetplayeconomy.vault.azure.net/"),
+            new DefaultAzureCredential()
+        );
+    }
+});
 
 const string AllowedOriginSetting = "AllowedOrigin";
 

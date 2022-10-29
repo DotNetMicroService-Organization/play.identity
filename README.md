@@ -3,7 +3,7 @@ Play Economy Identity microservice.
 
 ## Create and publish package Contracts
 ```powershell
-$version="1.0.5"
+$version="1.0.6"
 $owner="DotNetMicroService-Organization"
 $ph_pat="[PAT HERE]"
 
