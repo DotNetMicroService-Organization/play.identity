@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: identity
-          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.8
+          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.9
           env:
             - name: ServiceSettings__MessageBroker
               value: SERVICEBUS

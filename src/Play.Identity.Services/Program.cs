@@ -1,4 +1,5 @@
 using GreenPipes;
+using Microsoft.AspNetCore.HttpOverrides;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -59,7 +60,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks()
                 .AddMongoDb();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
