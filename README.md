@@ -40,16 +40,6 @@ $namespace="identity"
 kubectl create namespace $namespace
 ```
 
-<!-- ## Create the k8s secret
-```powershell
-kubectl create secret generic identity-secrets --from-literal=cosmosdb-connectionstring=$cosmosDbConnString --from-literal=servicebus-connectionstring=$serviceBusConnString --from-literal=admin-password=$adminPass -n $namespace
-``` -->
-
-## Create the k8s pod
-```powershell
-kubectl apply -f kubernetes\identity.yaml -n $namespace
-```
-
 ## Create the pod managed identity
 ```powershell
 az identity create --resource-group $appname -n $namespace
@@ -64,7 +54,7 @@ $IDENTITY_CLIENT_ID=az identity show -g $appname -n $namespace --query clientId 
 az keyvault set-policy -n $appname --secret-permissions get list --spn $IDENTITY_CLIENT_ID
 ```
 
-## Create the signing certificate
+## install the helm chart
 ```powershell
-kubectl apply -f kubernetes\signing-cer.yaml -n $namespace
+helm install identity-service .\helm -f .\helm\values.yaml -n $namespace
 ```
