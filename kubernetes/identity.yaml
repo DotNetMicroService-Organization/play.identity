@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: identity
-          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.9
+          image: dotnetplayeconomy.azurecr.io/play.identity:1.0.10
           env:
             - name: ServiceSettings__MessageBroker
               value: SERVICEBUS
@@ -24,7 +24,7 @@ spec:
               value: /identity-svc
             - name: IdentitySettings__CertificateCerFilePath
               value: "/certificates/certificate.crt"
-            - name: IdentitySettings__CertificateCerFilePath
+            - name: IdentitySettings__CertificateKeyFilePath
               value: "/certificates/certificate.key"
           resources:
             limits:
