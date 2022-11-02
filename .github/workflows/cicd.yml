@@ -21,7 +21,7 @@ jobs:
         
     outputs:
       new_version: ${{ steps.tab_bump.outputs.new_tag}}
-	
+      
   package-and-publish-contracts:
     runs-on: ubuntu-latest
     needs: generate-version
