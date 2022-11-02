@@ -100,6 +100,6 @@ jobs:
         --version ${{env.HELM_CHART_VERSION}} \ 
         -f helm/values.yaml -n ${{env.SERVICE_NAME}} \ 
         --set image.tag=${{ needs.generate-version.outputs.new_version }} \
-        --install --wait
+        --install --wait --debug
       env:
         HELM_EXPERIMENTAL_OCI: 1
