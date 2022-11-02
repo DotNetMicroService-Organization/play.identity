@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2   
+    - uses: actions/checkout@v3
     
     - name: Github Tag Bump
       id: tab_bump
@@ -60,9 +60,3 @@ jobs:
           "GH_OWNER=${{github.repository_owner}}"
           "GH_PAT=${{secrets.GH_PAT}}"
         tags: ${{env.APP_NAME}}.azurecr.io/play.identity:${{ needs.generate-version.outputs.new_version }}
-        
-        
-        
-        
-        
-        
