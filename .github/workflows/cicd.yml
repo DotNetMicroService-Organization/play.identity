@@ -95,7 +95,8 @@ jobs:
     - name: Deploy helm chart
       run: |
         helm upgrade \
-        ${{env.SERVICE_NAME}}-service oci://${{ env.APP_NAME }}.azurecr.io/helm/microservice \ 
+        "${{env.SERVICE_NAME}}-service" \ 
+        oci://${{ env.APP_NAME }}.azurecr.io/helm/microservice \ 
         --version ${{env.HELM_CHART_VERSION}} \ 
         -f helm/values.yaml -n ${{env.SERVICE_NAME}} \ 
         --set image.tag=${{ needs.generate-version.outputs.new_version }} \
