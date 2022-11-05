@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Common.Configuration;
 using Play.Common.HealthChecks;
+using Play.Common.Logging;
 using Play.Common.MassTransit;
 using Play.Common.Settings;
 using Play.Identity.Services.Entities;
@@ -48,6 +49,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHealthChecks()
                 .AddMongoDb();
+
+builder.Services.AddSeqLogging(builder.Configuration);
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

@@ -9,15 +9,23 @@ namespace Play.Identity.Services.Consumers
     public class DebitGilConsumer : IConsumer<DebitGil>
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILogger<DebitGilConsumer> logger;
 
-        public DebitGilConsumer(UserManager<ApplicationUser> userManager)
+        public DebitGilConsumer(UserManager<ApplicationUser> userManager, ILogger<DebitGilConsumer> logger)
         {
             this.userManager = userManager;
+            this.logger = logger;
         }
 
         public async Task Consume(ConsumeContext<DebitGil> context)
         {
             var message = context.Message;
+
+            logger.LogInformation(
+                "Debiting {Gil} gil from User {UserId} with CorrelationId {CorrelationId}...",
+                message.Gil,
+                message.UserId,
+                message.CorrelationId);
 
             var user = await userManager.FindByIdAsync(message.UserId.ToString());
 
@@ -33,7 +41,14 @@ namespace Play.Identity.Services.Consumers
             user.Gil -= message.Gil;
 
             if (user.Gil < 0)
+            {
+                logger.LogError(
+                    "Not enough gil to debit {Gil} gil from User {UserId} with CorrelationId {CorrelationId}.",
+                    message.Gil,
+                    message.UserId,
+                    message.CorrelationId);
                 throw new InsufficientFoundsException(message.UserId, message.Gil);
+            }
 
             user.MessageIds.Add(context.MessageId.Value);
 
