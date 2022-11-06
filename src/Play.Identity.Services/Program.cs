@@ -8,6 +8,7 @@ using Play.Common.Configuration;
 using Play.Common.HealthChecks;
 using Play.Common.Logging;
 using Play.Common.MassTransit;
+using Play.Common.OpenTelemetry;
 using Play.Common.Settings;
 using Play.Identity.Services.Entities;
 using Play.Identity.Services.Exceptions;
@@ -50,7 +51,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks()
                 .AddMongoDb();
 
-builder.Services.AddSeqLogging(builder.Configuration);
+builder.Services.AddSeqLogging(builder.Configuration)
+                .AddTracing(builder.Configuration);
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

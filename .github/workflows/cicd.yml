@@ -49,7 +49,7 @@ jobs:
     env:
       APP_NAME: dotnetplayeconomy
       SERVICE_NAME: identity
-      HELM_CHART_VERSION: 0.1.1
+      HELM_CHART_VERSION: 0.1.3
 
     permissions:
       id-token: write
