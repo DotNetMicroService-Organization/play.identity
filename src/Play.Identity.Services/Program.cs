@@ -52,7 +52,8 @@ builder.Services.AddHealthChecks()
                 .AddMongoDb();
 
 builder.Services.AddSeqLogging(builder.Configuration)
-                .AddTracing(builder.Configuration);
+                .AddTracing(builder.Configuration)
+                .AddMetrics(builder.Configuration);
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -82,6 +83,8 @@ app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Lax
 });
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.UseHttpsRedirection();
 
