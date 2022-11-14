@@ -3,55 +3,54 @@ using Microsoft.Extensions.Options;
 using Play.Identity.Services.Entities;
 using Play.Identity.Services.Settings;
 
-namespace Play.Identity.Services.HostedServices
+namespace Play.Identity.Services.HostedServices;
+
+public class IdentitySeedHostedService : IHostedService
 {
-    public class IdentitySeedHostedService : IHostedService
+    private readonly IServiceScopeFactory serviceScopeFactory;
+    private readonly IdentitySettings settings;
+
+    public IdentitySeedHostedService(IServiceScopeFactory serviceScopeFactory, IOptions<IdentitySettings> identityOptions)
     {
-        private readonly IServiceScopeFactory serviceScopeFactory;
-        private readonly IdentitySettings settings;
+        this.serviceScopeFactory = serviceScopeFactory;
+        settings = identityOptions.Value;
+    }
 
-        public IdentitySeedHostedService(IServiceScopeFactory serviceScopeFactory, IOptions<IdentitySettings> identityOptions)
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        using var scope = serviceScopeFactory.CreateScope();
+
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        await CreateRoleIfNotExistsAsync(Roles.Admin, roleManager);
+        await CreateRoleIfNotExistsAsync(Roles.Player, roleManager);
+
+        var adminUser = await userManager.FindByEmailAsync(settings.AdminUserEmail);
+
+        if (adminUser is null)
         {
-            this.serviceScopeFactory = serviceScopeFactory;
-            settings = identityOptions.Value;
-        }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            using var scope = serviceScopeFactory.CreateScope();
-
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            await CreateRoleIfNotExistsAsync(Roles.Admin, roleManager);
-            await CreateRoleIfNotExistsAsync(Roles.Player, roleManager);
-
-            var adminUser = await userManager.FindByEmailAsync(settings.AdminUserEmail);
-
-            if (adminUser is null)
+            adminUser = new ApplicationUser
             {
-                adminUser = new ApplicationUser
-                {
-                    UserName = settings.AdminUserEmail,
-                    Email = settings.AdminUserEmail,
-                    SecurityStamp = Guid.NewGuid().ToString()
-                };
+                UserName = settings.AdminUserEmail,
+                Email = settings.AdminUserEmail,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
 
-                await userManager.CreateAsync(adminUser, settings.AdminUserPassword);
-                await userManager.AddToRoleAsync(adminUser, Roles.Admin);
-            }
+            await userManager.CreateAsync(adminUser, settings.AdminUserPassword);
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
         }
+    }
 
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-        private static async Task CreateRoleIfNotExistsAsync(string role, RoleManager<ApplicationRole> roleManager)
+    private static async Task CreateRoleIfNotExistsAsync(string role, RoleManager<ApplicationRole> roleManager)
+    {
+        var roleExists = await roleManager.RoleExistsAsync(role);
+
+        if (!roleExists)
         {
-            var roleExists = await roleManager.RoleExistsAsync(role);
-
-            if (!roleExists)
-            {
-                await roleManager.CreateAsync(new ApplicationRole { Name = role });
-            }
+            await roleManager.CreateAsync(new ApplicationRole { Name = role });
         }
     }
 }

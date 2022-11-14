@@ -1,14 +1,13 @@
-namespace Play.Identity.Services.Exceptions
+namespace Play.Identity.Services.Exceptions;
+
+[Serializable]
+internal class UnknownUserException : Exception
 {
-    [Serializable]
-    internal class UnknownUserException : Exception
+    public Guid userId { get; }
+
+    public UnknownUserException(Guid userId) : base($"Unknown user '{userId}'")
     {
-        public Guid userId { get; }
-
-        public UnknownUserException(Guid userId) : base($"Unknown user '{userId}'")
-        {
-            this.userId = userId;
-        }
-
+        this.userId = userId;
     }
+
 }

@@ -1,8 +1,7 @@
-namespace Play.Identity.Services
+namespace Play.Identity.Services;
+
+public static class Roles
 {
-    public static class Roles
-    {
-        public const string Admin = "Admin";
-        public const string Player = "Player";
-    }
+    public const string Admin = "Admin";
+    public const string Player = "Player";
 }
